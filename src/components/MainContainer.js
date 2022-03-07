@@ -1,4 +1,6 @@
 import React from "react";
+import { Routes, Route } from "react-router";
+import CommentsContainer from "./CommentsContainer";
 import Header from "./Header";
 
 function MainContainer() {
@@ -6,6 +8,9 @@ function MainContainer() {
     <div>
       <div className="main-container">
         <Header />
+        <Routes>
+          <Route path="/" element={<CommentsContainer />} />
+        </Routes>
       </div>
     </div>
   );
