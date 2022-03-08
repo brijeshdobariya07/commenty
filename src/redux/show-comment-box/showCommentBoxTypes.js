@@ -1,0 +1,1 @@
+export const SHOW_COMMENT_BOX = "SHOW_COMMENT_BOX";

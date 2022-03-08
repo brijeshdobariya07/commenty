@@ -1,50 +1,149 @@
 @import url("https://fonts.googleapis.com/css2?family=Fredoka:wght@500&display=swap");
 * {
-	margin: 0;
-	padding: 0;
-	box-sizing: border-box;
-	/* border: 1px solid black; */
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  /* border: 1px solid black; */
 }
 
 body {
-	width: 100%;
-	height: 100vh;
-	background: rgb(97, 97, 97);
-	font-family: "Fredoka", sans-serif;
+  width: 100%;
+  height: 100vh;
+  background: rgb(97, 97, 97);
+  font-family: "Fredoka", sans-serif;
 }
 
 .header {
-	text-align: center;
-	color: aliceblue;
-	background-color: black;
-	max-width: 80%;
-	padding: 1rem;
-	font-size: 2.5rem;
-	font-weight: bold;
-	margin: 1rem auto;
-	border-radius: 10px;
+  text-align: center;
+  color: aliceblue;
+  background-color: black;
+  max-width: 80%;
+  padding: 1rem;
+  font-size: 2.5rem;
+  font-weight: bold;
+  margin: 1rem auto;
+  border-radius: 10px;
 }
 
 .comments-container {
-	max-width: 80%;
-	margin: 3rem auto;
-	font-size: 1.2rem;
+  max-width: 80%;
+  margin: 3rem auto;
+  font-size: 1.2rem;
 }
 .comment {
-	margin-bottom: 1.5rem;
-	background: #f2f2f2;
-	padding: 1rem;
-	border-radius: 10px;
+  margin-top: 1.5rem;
+  background: #f2f2f2;
+  padding: 1rem;
+  border-radius: 10px;
+  clear: both;
 }
+.reply-comments {
+  margin-top: 0.5rem;
+  font-size: 1rem;
+}
+.reply-comment {
+  position: relative;
+  left: 15%;
+  margin-bottom: 0.5rem;
+  background: #c7c6c6;
+  padding: 0.5rem 1rem;
+  border-radius: 10px;
+  clear: both;
+  width: 75%;
+}
+
 .action-icons {
-	margin-top: 1rem;
-	display: flex;
-	justify-content: space-around;
+  margin-top: 1rem;
+  display: flex;
+  justify-content: space-around;
 }
 .like {
-	color: rgb(243, 49, 130);
+  color: rgb(243, 49, 130);
 }
 
 .send-icon {
-	color: green;
+  color: green;
+}
+
+.add-comment-btn-container {
+  margin-right: 10%;
+  float: right;
+  margin-bottom: 1rem;
+}
+.add-comment-btn {
+  border: 2px solid #1a1a1a;
+  border-radius: 15px;
+  color: #3b3b3b;
+  cursor: pointer;
+  font-family: Roobert, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica,
+    Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+  font-size: 1rem;
+  font-weight: bold;
+  padding: 0.7rem 24px;
+  text-align: center;
+  transition: all 300ms cubic-bezier(0.23, 1, 0.32, 1);
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+  will-change: transform;
+}
+
+.add-comment-btn:hover {
+  color: #fff;
+  background-color: #1a1a1a;
+  box-shadow: rgba(0, 0, 0, 0.25) 0 8px 15px;
+  transform: translateY(-2px);
+}
+
+.add-comment-btn:active {
+  box-shadow: none;
+  transform: translateY(0);
+}
+
+.add-comment {
+  background-color: #1a1a1a;
+  color: aliceblue;
+  min-width: 20%;
+  /* margin: auto; */
+  text-align: center;
+  padding: 1rem;
+  border-radius: 20px;
+  position: absolute;
+  top: 0;
+  transform: translate(150%, 5%);
+  box-shadow: 0 0 50rem #1a1a1a;
+}
+
+.add-comment textarea {
+  width: 90%;
+  margin-top: 1rem;
+  min-height: 7rem;
+  border-radius: 10px;
+  border: none;
+  font-family: "Fredoka", sans-serif;
+  font-size: 1.1rem;
+  resize: none;
+  outline: none;
+  padding: 0.7rem;
+}
+
+.popup-btn {
+  min-width: 30%;
+  margin-top: 2rem;
+}
+.popup-btn:hover {
+  box-shadow: 0 0 1rem #f2f2f2;
+}
+
+.add-comment div:first-child {
+  position: relative;
+}
+.close-btn {
+  position: absolute;
+  top: 0;
+  right: 0;
+  font-size: 1.5rem;
+  border-radius: 50px;
+  width: 1.8rem;
+  border: none;
 }
