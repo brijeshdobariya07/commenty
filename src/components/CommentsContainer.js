@@ -69,17 +69,18 @@ function CommentsContainer() {
         );
 
         alsoDeleteReplyComments.forEach((reply) => {
+          const deleteReplyCommentIndex = replyComments.findIndex(
+            (item) => +item.id === +reply.id
+          );
+
           axios
             .delete(
               `https://62207dfdce99a7de195b3ec5.mockapi.io/reply/${reply.id}`
             )
             .then((res) => {
-              const deleteReplyCommentIndex = replyComments.findIndex(
-                (item) => +item.id === +reply.id
-              );
               let replyCommentsData = [...replyComments];
-              replyComments.splice(deleteReplyCommentIndex, 1);
-              setReplyComments(replyCommentsData);
+              replyCommentsData.splice(deleteReplyCommentIndex, 1);
+              setReplyComments(replyCommentsData || []);
             })
             .catch((err) => console.log(err));
         });
@@ -92,7 +93,18 @@ function CommentsContainer() {
   };
 
   const addCommentToState = (data) => {
-    setComments((item) => [...item, data]);
+    // console.log(data);
+    const findThisCommentIndex = comments.findIndex(
+      (item) => +item.id === +data.id
+    );
+
+    if (findThisCommentIndex !== -1) {
+      let tempComments = [...comments];
+      tempComments[findThisCommentIndex].text = data?.text || "";
+      setComments(tempComments);
+    } else {
+      setComments((item) => [...item, data]);
+    }
   };
 
   // Reply section

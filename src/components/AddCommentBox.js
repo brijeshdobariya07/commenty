@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { showCommentBox } from "../redux";
 import { useSelector, useDispatch } from "react-redux";
 import axios from "axios";
@@ -12,6 +12,13 @@ function AddCommentBox(props) {
   const replyCommentId = useSelector(
     (state) => state.showCommentBox.replyCommentId
   );
+
+  const editCommentText = replyCommentId?.text || "";
+  const editCommentId = replyCommentId?.id || null;
+
+  useEffect(() => {
+    setCommentMsg(editCommentText);
+  }, [editCommentText]);
 
   const handleSubmitButton = () => {
     if (commentMsg !== "" && replyCommentId === "") {
@@ -36,10 +43,21 @@ function AddCommentBox(props) {
           dispatch(showCommentBox());
           addReplyToState(res.data);
         });
-    } else if (typeof replyCommentId === "object") {
-      setCommentMsg(replyCommentId.text);
     } else {
       alert("Please add Something");
+    }
+
+    if (editCommentText !== "" && editCommentId !== null) {
+      axios
+        .put(
+          `https://62207dfdce99a7de195b3ec5.mockapi.io/commenty/${editCommentId}`,
+          {
+            text: commentMsg,
+          }
+        )
+        .then((res) => {
+          addCommentToState(res.data);
+        });
     }
 
     navigate("/");
