@@ -15,6 +15,7 @@ function AddCommentBox(props) {
 
   const editCommentText = replyCommentId?.text || "";
   const editCommentId = replyCommentId?.id || null;
+  const editCommentIfSubId = replyCommentId.subid;
 
   useEffect(() => {
     setCommentMsg(editCommentText);
@@ -47,7 +48,11 @@ function AddCommentBox(props) {
       alert("Please add Something");
     }
 
-    if (editCommentText !== "" && editCommentId !== null) {
+    if (
+      editCommentText !== "" &&
+      editCommentId !== null &&
+      editCommentIfSubId === undefined
+    ) {
       axios
         .put(
           `https://62207dfdce99a7de195b3ec5.mockapi.io/commenty/${editCommentId}`,
@@ -57,6 +62,23 @@ function AddCommentBox(props) {
         )
         .then((res) => {
           addCommentToState(res.data);
+        });
+    }
+
+    if (
+      editCommentText !== "" &&
+      editCommentId !== null &&
+      editCommentIfSubId !== undefined
+    ) {
+      axios
+        .put(
+          `https://62207dfdce99a7de195b3ec5.mockapi.io/reply/${editCommentId}`,
+          {
+            text: commentMsg,
+          }
+        )
+        .then((res) => {
+          addReplyToState(res.data);
         });
     }
 

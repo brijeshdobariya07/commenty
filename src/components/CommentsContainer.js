@@ -97,7 +97,6 @@ function CommentsContainer() {
   };
 
   const addCommentToState = (data) => {
-    // console.log(data);
     const findThisCommentIndex = comments.findIndex(
       (item) => +item.id === +data.id
     );
@@ -128,12 +127,17 @@ function CommentsContainer() {
       .catch((err) => alert(err));
   };
 
+  const replyEdit = (reply) => {
+    console.log(reply);
+    dispatch(showCommentBox(reply));
+  };
+
   const replyDelete = (id) => {
     const commentDelete = replyComments.findIndex(
       (comment) => comment.id === id
     );
     axios
-      .delete(`https://62207dfdce99a7de195b3ec5.mockapi.io/commenty/${id}`)
+      .delete(`https://62207dfdce99a7de195b3ec5.mockapi.io/reply/${id}`)
       .then((res) => {
         let data = [...replyComments];
         data.splice(commentDelete, 1);
@@ -143,7 +147,16 @@ function CommentsContainer() {
   };
 
   const addReplyToState = (data) => {
-    setReplyComments((item) => [...item, data]);
+    const findThisCommentIndex = replyComments.findIndex(
+      (item) => +item.id === +data.id
+    );
+    if (findThisCommentIndex !== -1) {
+      let tempReplyComments = [...replyComments];
+      tempReplyComments[findThisCommentIndex].text = data?.text || "";
+      setReplyComments(tempReplyComments);
+    } else {
+      setReplyComments((item) => [...item, data]);
+    }
   };
 
   return (
@@ -179,7 +192,7 @@ function CommentsContainer() {
                             className={reply.like ? "like" : "unlike"}
                             onClick={() => replyLike(reply.id)}
                           />
-                          <ImPencil2 />
+                          <ImPencil2 onClick={() => replyEdit(reply)} />
                           <IoTrashOutline
                             onClick={() => replyDelete(reply.id)}
                           />
