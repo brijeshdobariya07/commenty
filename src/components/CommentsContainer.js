@@ -14,6 +14,7 @@ function CommentsContainer() {
 
   useEffect(() => {
     getComments();
+    getReplyComments();
   }, []);
 
   const isShowCommentBox = useSelector(
@@ -31,7 +32,9 @@ function CommentsContainer() {
       .get("https://62207dfdce99a7de195b3ec5.mockapi.io/commenty")
       .then((res) => setComments(res.data))
       .catch((err) => alert(err));
+  };
 
+  const getReplyComments = () => {
     axios
       .get("https://62207dfdce99a7de195b3ec5.mockapi.io/reply")
       .then((res) => setReplyComments(res.data))
@@ -62,30 +65,31 @@ function CommentsContainer() {
       .then((res) => {
         let data = [...comments];
         data.splice(commentDelete, 1);
+        alsoDeleteReplyComments(id);
         setComments(data);
-
-        const alsoDeleteReplyComments = replyComments.filter(
-          (item) => Number(item.subid) === Number(id)
-        );
-
-        alsoDeleteReplyComments.forEach((reply) => {
-          const deleteReplyCommentIndex = replyComments.findIndex(
-            (item) => +item.id === +reply.id
-          );
-
-          axios
-            .delete(
-              `https://62207dfdce99a7de195b3ec5.mockapi.io/reply/${reply.id}`
-            )
-            .then((res) => {
-              let replyCommentsData = [...replyComments];
-              replyCommentsData.splice(deleteReplyCommentIndex, 1);
-              setReplyComments(replyCommentsData || []);
-            })
-            .catch((err) => console.log(err));
-        });
       })
       .catch((err) => alert("cannot like"));
+  };
+
+  const alsoDeleteReplyComments = (id) => {
+    const thisDeleteReplyComments = replyComments.filter(
+      (item) => Number(item.subid) === Number(id)
+    );
+    let replyCommentsData = [...replyComments];
+
+    thisDeleteReplyComments.forEach((reply) => {
+      const deleteReplyCommentIndex = replyComments.findIndex(
+        (item) => +item.id === +reply.id
+      );
+
+      axios
+        .delete(`https://62207dfdce99a7de195b3ec5.mockapi.io/reply/${reply.id}`)
+        .then((res) => {
+          replyCommentsData.splice(deleteReplyCommentIndex, 1);
+          setReplyComments(replyCommentsData);
+        })
+        .catch((err) => console.log(err));
+    });
   };
 
   const handleCommentEdit = (comment) => {
@@ -175,9 +179,6 @@ function CommentsContainer() {
                             className={reply.like ? "like" : "unlike"}
                             onClick={() => replyLike(reply.id)}
                           />
-                          {/* <FaShare
-                            onClick={() => handleReplyButton(comment.id)}
-                          /> */}
                           <ImPencil2 />
                           <IoTrashOutline
                             onClick={() => replyDelete(reply.id)}
