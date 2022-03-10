@@ -67,8 +67,9 @@ body {
 }
 .like {
   color: rgb(243, 49, 130);
-  border-radius: 5px;
-  fill: rgb(243, 49, 130);
+}
+.unlike {
+  color: #aaaaaa;
 }
 
 .send-icon {

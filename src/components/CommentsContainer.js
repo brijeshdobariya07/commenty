@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { FaShare } from "react-icons/fa";
+import { FaShare, FaHeart } from "react-icons/fa";
 import { BsHeart } from "react-icons/bs";
 import { IoTrashOutline } from "react-icons/io5";
 import { ImPencil2 } from "react-icons/im";
@@ -171,7 +171,7 @@ function CommentsContainer() {
               <div className="comment">
                 <div className="comment-text">{text}</div>
                 <div className="action-icons">
-                  <BsHeart
+                  <FaHeart
                     className={like ? "like" : "unlike"}
                     onClick={() => doLike(id)}
                   />
@@ -195,7 +195,7 @@ function CommentsContainer() {
                       <div className="reply-comment" key={reply.id}>
                         <div className="comment-text">{reply.text}</div>
                         <div className="action-icons">
-                          <BsHeart
+                          <FaHeart
                             className={reply.like ? "like" : "unlike"}
                             onClick={() => replyLike(reply.id)}
                           />
