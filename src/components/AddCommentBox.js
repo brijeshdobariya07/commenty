@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { showCommentBox } from "../redux";
 import { useSelector, useDispatch } from "react-redux";
 import axios from "axios";
@@ -85,6 +85,12 @@ function AddCommentBox(props) {
     navigate("/");
   };
 
+  // For Focus the textarea
+  const focusTextArea = useRef(null);
+  useEffect(() => {
+    focusTextArea.current.focus();
+  }, []);
+
   return (
     <div className="add-comment">
       <div>
@@ -96,6 +102,7 @@ function AddCommentBox(props) {
           rows="10"
           onChange={(e) => setCommentMsg(e.target.value)}
           value={commentMsg}
+          ref={focusTextArea}
         ></textarea>
         <br />
         <button
