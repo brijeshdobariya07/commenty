@@ -15,7 +15,7 @@ function AddCommentBox(props) {
 
   const editCommentText = replyCommentId?.text || "";
   const editCommentId = replyCommentId?.id || null;
-  const editCommentIfSubId = replyCommentId.subid;
+  const editCommentIfSubId = replyCommentId?.subid;
 
   useEffect(() => {
     setCommentMsg(editCommentText);

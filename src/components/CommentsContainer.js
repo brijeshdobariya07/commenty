@@ -133,6 +133,8 @@ function CommentsContainer() {
   };
 
   const replyDelete = (id) => {
+    alert("This Comment Will be delete");
+
     const commentDelete = replyComments.findIndex(
       (comment) => comment.id === id
     );
@@ -163,20 +165,19 @@ function CommentsContainer() {
     <div>
       <div className="comments-container">
         {comments.map((comment) => {
+          const { id, text, like } = comment;
           return (
-            <div key={comment.id}>
+            <div key={id} className="maped-comment">
               <div className="comment">
-                <div className="comment-text">{comment.text}</div>
+                <div className="comment-text">{text}</div>
                 <div className="action-icons">
                   <BsHeart
-                    className={comment.like ? "like" : "unlike"}
-                    onClick={() => doLike(comment.id)}
+                    className={like ? "like" : "unlike"}
+                    onClick={() => doLike(id)}
                   />
-                  <FaShare onClick={() => handleReplyButton(comment.id)} />
+                  <FaShare onClick={() => handleReplyButton(id)} />
                   <ImPencil2 onClick={() => handleCommentEdit(comment)} />
-                  <IoTrashOutline
-                    onClick={() => handleDeleteButton(comment.id)}
-                  />
+                  <IoTrashOutline onClick={() => handleDeleteButton(id)} />
                 </div>
               </div>
 
