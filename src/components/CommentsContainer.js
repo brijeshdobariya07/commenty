@@ -176,8 +176,14 @@ function CommentsContainer() {
                     onClick={() => doLike(id)}
                   />
                   <FaShare onClick={() => handleReplyButton(id)} />
-                  <ImPencil2 onClick={() => handleCommentEdit(comment)} />
-                  <IoTrashOutline onClick={() => handleDeleteButton(id)} />
+                  <ImPencil2
+                    onClick={() => handleCommentEdit(comment)}
+                    className="edit-icon"
+                  />
+                  <IoTrashOutline
+                    onClick={() => handleDeleteButton(id)}
+                    className="trash-icon"
+                  />
                 </div>
               </div>
 
@@ -193,8 +199,12 @@ function CommentsContainer() {
                             className={reply.like ? "like" : "unlike"}
                             onClick={() => replyLike(reply.id)}
                           />
-                          <ImPencil2 onClick={() => replyEdit(reply)} />
+                          <ImPencil2
+                            onClick={() => replyEdit(reply)}
+                            className="edit-icon"
+                          />
                           <IoTrashOutline
+                            className="trash-icon"
                             onClick={() => replyDelete(reply.id)}
                           />
                         </div>
