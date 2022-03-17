@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { FaShare, FaHeart } from "react-icons/fa";
-import { BsHeart } from "react-icons/bs";
+// import { BsHeart } from "react-icons/bs";
 import { IoTrashOutline } from "react-icons/io5";
 import { ImPencil2 } from "react-icons/im";
 import AddCommentBox from "./AddCommentBox";
@@ -13,7 +13,12 @@ function CommentsContainer() {
   const [replyComments, setReplyComments] = useState([]);
   const [loading, setLoading] = useState(false);
 
+  const handleLoading = (value) => {
+    setLoading(value);
+  };
+
   useEffect(() => {
+    setLoading(true);
     getComments();
     getReplyComments();
   }, []);
@@ -33,6 +38,7 @@ function CommentsContainer() {
       .get("https://62207dfdce99a7de195b3ec5.mockapi.io/commenty")
       .then((res) => {
         setComments(res.data);
+        setLoading(false);
       })
       .catch((err) => alert(err));
   };
@@ -67,6 +73,7 @@ function CommentsContainer() {
 
   const handleDeleteButton = (index) => {
     alert("This Comment Will be delete");
+    setLoading(true);
 
     const commentId = comments[index].id;
 
@@ -78,10 +85,10 @@ function CommentsContainer() {
         let data = [...comments];
         data.splice(index, 1);
         alsoDeleteReplyComments(commentId);
-        setLoading(false);
         setComments(data);
       })
-      .catch((err) => alert("cannot like"));
+      .then((res) => setLoading(false))
+      .catch((err) => alert("cannot delete"));
   };
 
   const alsoDeleteReplyComments = (id) => {
@@ -90,12 +97,12 @@ function CommentsContainer() {
     );
     let replyCommentsData = [...replyComments];
 
-    thisDeleteReplyComments.forEach((reply) => {
+    thisDeleteReplyComments.forEach(async (reply) => {
       const deleteReplyCommentIndex = replyComments.findIndex(
         (item) => +item.id === +reply.id
       );
 
-      axios
+      await axios
         .delete(`https://62207dfdce99a7de195b3ec5.mockapi.io/reply/${reply.id}`)
         .then((res) => {
           replyCommentsData.splice(deleteReplyCommentIndex, 1);
@@ -186,64 +193,66 @@ function CommentsContainer() {
         /> */}
         </div>
       ) : (
-        <div className="comments-container">
-          {comments.map((comment, index) => {
-            return (
-              <div key={comment.id} className="maped-comment">
-                <div className="comment">
-                  <div className="comment-text">{comment.text}</div>
-                  <div className="action-icons">
-                    <FaHeart
-                      className={comment.like ? "like" : "unlike"}
-                      onClick={() => doLike(index)}
-                    />
-                    <FaShare onClick={() => handleReplyButton(comment.id)} />
-                    <ImPencil2
-                      onClick={() => handleCommentEdit(comment)}
-                      className="edit-icon"
-                    />
-                    <IoTrashOutline
-                      onClick={() => handleDeleteButton(index)}
-                      className="trash-icon"
-                    />
-                  </div>
-                </div>
-
-                <div className="reply-comments">
-                  {replyComments
-                    ?.filter((reply) => reply?.subid === Number(comment.id))
-                    ?.map((reply) => (
-                      <div className="reply-comment" key={reply.id}>
-                        <div className="comment-text">{reply.text}</div>
-                        <div className="action-icons">
-                          <FaHeart
-                            className={reply.like ? "like" : "unlike"}
-                            onClick={() => replyLike(reply.id)}
-                          />
-                          <ImPencil2
-                            onClick={() => replyEdit(reply)}
-                            className="edit-icon"
-                          />
-                          <IoTrashOutline
-                            className="trash-icon"
-                            onClick={() => replyDelete(reply.id)}
-                          />
-                        </div>
-                      </div>
-                    ))}
+        ""
+      )}
+      <div className="comments-container">
+        {comments.map((comment, index) => {
+          return (
+            <div key={comment.id} className="maped-comment">
+              <div className="comment">
+                <div className="comment-text">{comment.text}</div>
+                <div className="action-icons">
+                  <FaHeart
+                    className={comment.like ? "like" : "unlike"}
+                    onClick={() => doLike(index)}
+                  />
+                  <FaShare onClick={() => handleReplyButton(comment.id)} />
+                  <ImPencil2
+                    onClick={() => handleCommentEdit(comment)}
+                    className="edit-icon"
+                  />
+                  <IoTrashOutline
+                    onClick={() => handleDeleteButton(index)}
+                    className="trash-icon"
+                  />
                 </div>
               </div>
-            );
-          })}
 
-          {isShowCommentBox && (
-            <AddCommentBox
-              addCommentToState={addCommentToState}
-              addReplyToState={addReplyToState}
-            />
-          )}
-        </div>
-      )}
+              <div className="reply-comments">
+                {replyComments
+                  ?.filter((reply) => reply?.subid === Number(comment.id))
+                  ?.map((reply) => (
+                    <div className="reply-comment" key={reply.id}>
+                      <div className="comment-text">{reply.text}</div>
+                      <div className="action-icons">
+                        <FaHeart
+                          className={reply.like ? "like" : "unlike"}
+                          onClick={() => replyLike(reply.id)}
+                        />
+                        <ImPencil2
+                          onClick={() => replyEdit(reply)}
+                          className="edit-icon"
+                        />
+                        <IoTrashOutline
+                          className="trash-icon"
+                          onClick={() => replyDelete(reply.id)}
+                        />
+                      </div>
+                    </div>
+                  ))}
+              </div>
+            </div>
+          );
+        })}
+
+        {isShowCommentBox && (
+          <AddCommentBox
+            addCommentToState={addCommentToState}
+            addReplyToState={addReplyToState}
+            handleLoading={handleLoading}
+          />
+        )}
+      </div>
     </div>
   );
 }

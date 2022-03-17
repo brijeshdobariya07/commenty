@@ -10,6 +10,7 @@ function AddCommentBox(props) {
   const navigate = useNavigate();
 
   const { addCommentToState, addReplyToState } = props;
+  const handleLoading = props.handleLoading;
 
   const replyCommentId = useSelector(
     (state) => state.showCommentBox.replyCommentId
@@ -25,6 +26,7 @@ function AddCommentBox(props) {
 
   const handleSubmitButton = () => {
     if (commentMsg && !replyCommentId) {
+      handleLoading(true);
       dispatch(showCommentBox());
       axios
         .post("https://62207dfdce99a7de195b3ec5.mockapi.io/commenty", {
@@ -35,9 +37,11 @@ function AddCommentBox(props) {
           // dispatch(showCommentBox());
           addCommentToState(res.data);
         })
+        .then((res) => handleLoading(false))
         .catch((err) => alert(err));
     } else if (commentMsg && replyCommentId) {
       dispatch(showCommentBox());
+      handleLoading(true);
       axios
         .post("https://62207dfdce99a7de195b3ec5.mockapi.io/reply", {
           text: commentMsg,
@@ -47,7 +51,8 @@ function AddCommentBox(props) {
         .then((res) => {
           // dispatch(showCommentBox());
           addReplyToState(res.data);
-        });
+        })
+        .then((res) => handleLoading(false));
     } else {
       alert("Please add Something");
     }
