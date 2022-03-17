@@ -187,3 +187,36 @@ body {
 .edit-icon:hover {
   color: rgb(64, 189, 75);
 }
+/* .spineer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  clear: both;
+}
+.spinner > img {
+  background-color: #1a1a1a;
+  border-radius: 50px;
+  margin: auto;
+  text-align: center;
+} */
+/* .spinner-img {
+  width: 100px;
+  height: 100px;
+  border-radius: 100px;
+} */
+
+.spineer {
+  /* background: url("https://cdn.dribbble.com/users/416315/screenshots/4275501/media/ba4a16a75df2b9ad42cfe383bd252fd0.gif"); */
+  background: url("https://tenor.com/view/loader-loading-spinning-please-wait-no-signal-gif-13911485.gif");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  width: 50px;
+  height: 50px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  clear: both;
+  margin: auto;
+  border-radius: 100px;
+}

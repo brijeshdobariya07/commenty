@@ -8,7 +8,9 @@ function AddCommentBox(props) {
   const [commentMsg, setCommentMsg] = useState("");
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
   const { addCommentToState, addReplyToState } = props;
+
   const replyCommentId = useSelector(
     (state) => state.showCommentBox.replyCommentId
   );
@@ -22,18 +24,20 @@ function AddCommentBox(props) {
   }, [editCommentText]);
 
   const handleSubmitButton = () => {
-    if (commentMsg !== "" && replyCommentId === "") {
+    if (commentMsg && !replyCommentId) {
+      dispatch(showCommentBox());
       axios
         .post("https://62207dfdce99a7de195b3ec5.mockapi.io/commenty", {
           text: commentMsg,
           like: false,
         })
         .then((res) => {
-          dispatch(showCommentBox());
+          // dispatch(showCommentBox());
           addCommentToState(res.data);
         })
         .catch((err) => alert(err));
-    } else if (commentMsg !== "" && replyCommentId !== "") {
+    } else if (commentMsg && replyCommentId) {
+      dispatch(showCommentBox());
       axios
         .post("https://62207dfdce99a7de195b3ec5.mockapi.io/reply", {
           text: commentMsg,
@@ -41,18 +45,14 @@ function AddCommentBox(props) {
           subid: Number(replyCommentId),
         })
         .then((res) => {
-          dispatch(showCommentBox());
+          // dispatch(showCommentBox());
           addReplyToState(res.data);
         });
     } else {
       alert("Please add Something");
     }
 
-    if (
-      editCommentText !== "" &&
-      editCommentId !== null &&
-      editCommentIfSubId === undefined
-    ) {
+    if (editCommentText && editCommentId && !editCommentIfSubId) {
       axios
         .put(
           `https://62207dfdce99a7de195b3ec5.mockapi.io/commenty/${editCommentId}`,
@@ -65,11 +65,7 @@ function AddCommentBox(props) {
         });
     }
 
-    if (
-      editCommentText !== "" &&
-      editCommentId !== null &&
-      editCommentIfSubId !== undefined
-    ) {
+    if (editCommentText && editCommentId && editCommentIfSubId) {
       axios
         .put(
           `https://62207dfdce99a7de195b3ec5.mockapi.io/reply/${editCommentId}`,

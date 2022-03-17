@@ -11,6 +11,7 @@ import { showCommentBox } from "../redux";
 function CommentsContainer() {
   const [comments, setComments] = useState([]);
   const [replyComments, setReplyComments] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     getComments();
@@ -30,42 +31,54 @@ function CommentsContainer() {
   const getComments = () => {
     axios
       .get("https://62207dfdce99a7de195b3ec5.mockapi.io/commenty")
-      .then((res) => setComments(res.data))
+      .then((res) => {
+        setComments(res.data);
+      })
       .catch((err) => alert(err));
   };
 
   const getReplyComments = () => {
     axios
       .get("https://62207dfdce99a7de195b3ec5.mockapi.io/reply")
-      .then((res) => setReplyComments(res.data))
+      .then((res) => {
+        setReplyComments(res.data);
+      })
       .catch((err) => alert(err));
   };
 
-  const doLike = (id) => {
-    const commentLike = comments.findIndex((comment) => comment.id === id);
-    const isThisCommentLike = comments[commentLike].like;
+  const doLike = (index) => {
+    const isThisCommentLike = comments[index].like;
+    const commentId = comments[index].id;
+
     axios
-      .put(`https://62207dfdce99a7de195b3ec5.mockapi.io/commenty/${id}`, {
-        like: !isThisCommentLike,
-      })
+      .put(
+        `https://62207dfdce99a7de195b3ec5.mockapi.io/commenty/${commentId}`,
+        {
+          like: !isThisCommentLike,
+        }
+      )
       .then((res) => {
         let data = [...comments];
-        data[commentLike] = res.data;
+        data[index] = res.data;
         setComments(data);
       })
       .catch((err) => alert("cannot like"));
   };
 
-  const handleDeleteButton = (id) => {
+  const handleDeleteButton = (index) => {
     alert("This Comment Will be delete");
 
-    const commentDelete = comments.findIndex((comment) => comment.id === id);
+    const commentId = comments[index].id;
+
     axios
-      .delete(`https://62207dfdce99a7de195b3ec5.mockapi.io/commenty/${id}`)
+      .delete(
+        `https://62207dfdce99a7de195b3ec5.mockapi.io/commenty/${commentId}`
+      )
       .then((res) => {
         let data = [...comments];
-        data.splice(commentDelete, 1);
-        alsoDeleteReplyComments(id);
+        data.splice(index, 1);
+        alsoDeleteReplyComments(commentId);
+        setLoading(false);
         setComments(data);
       })
       .catch((err) => alert("cannot like"));
@@ -163,35 +176,43 @@ function CommentsContainer() {
 
   return (
     <div>
-      <div className="comments-container">
-        {comments.map((comment) => {
-          const { id, text, like } = comment;
-          return (
-            <div key={id} className="maped-comment">
-              <div className="comment">
-                <div className="comment-text">{text}</div>
-                <div className="action-icons">
-                  <FaHeart
-                    className={like ? "like" : "unlike"}
-                    onClick={() => doLike(id)}
-                  />
-                  <FaShare onClick={() => handleReplyButton(id)} />
-                  <ImPencil2
-                    onClick={() => handleCommentEdit(comment)}
-                    className="edit-icon"
-                  />
-                  <IoTrashOutline
-                    onClick={() => handleDeleteButton(id)}
-                    className="trash-icon"
-                  />
+      {loading ? (
+        <div className="spineer">
+          {/* <img src={process.env.PUBLIC_URL + "/Spinner-2.gif"} alt="" /> */}
+          {/* <img
+          src="https://cdn.dribbble.com/users/66340/screenshots/3089041/media/aa30c93ee2bc90a11dd699e9fdf8292d.gif"
+          alt=""
+          className="spinner-img"
+        /> */}
+        </div>
+      ) : (
+        <div className="comments-container">
+          {comments.map((comment, index) => {
+            return (
+              <div key={comment.id} className="maped-comment">
+                <div className="comment">
+                  <div className="comment-text">{comment.text}</div>
+                  <div className="action-icons">
+                    <FaHeart
+                      className={comment.like ? "like" : "unlike"}
+                      onClick={() => doLike(index)}
+                    />
+                    <FaShare onClick={() => handleReplyButton(comment.id)} />
+                    <ImPencil2
+                      onClick={() => handleCommentEdit(comment)}
+                      className="edit-icon"
+                    />
+                    <IoTrashOutline
+                      onClick={() => handleDeleteButton(index)}
+                      className="trash-icon"
+                    />
+                  </div>
                 </div>
-              </div>
 
-              <div className="reply-comments">
-                {replyComments
-                  .filter((reply) => reply.subid === Number(comment.id))
-                  .map((reply) => {
-                    return (
+                <div className="reply-comments">
+                  {replyComments
+                    ?.filter((reply) => reply?.subid === Number(comment.id))
+                    ?.map((reply) => (
                       <div className="reply-comment" key={reply.id}>
                         <div className="comment-text">{reply.text}</div>
                         <div className="action-icons">
@@ -209,20 +230,20 @@ function CommentsContainer() {
                           />
                         </div>
                       </div>
-                    );
-                  })}
+                    ))}
+                </div>
               </div>
-            </div>
-          );
-        })}
+            );
+          })}
 
-        {isShowCommentBox ? (
-          <AddCommentBox
-            addCommentToState={addCommentToState}
-            addReplyToState={addReplyToState}
-          />
-        ) : null}
-      </div>
+          {isShowCommentBox && (
+            <AddCommentBox
+              addCommentToState={addCommentToState}
+              addReplyToState={addReplyToState}
+            />
+          )}
+        </div>
+      )}
     </div>
   );
 }
