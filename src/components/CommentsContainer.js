@@ -97,16 +97,16 @@ function CommentsContainer() {
     );
     let replyCommentsData = [...replyComments];
 
-    thisDeleteReplyComments.forEach(async (reply) => {
+    thisDeleteReplyComments?.forEach((reply) => {
       const deleteReplyCommentIndex = replyComments.findIndex(
         (item) => +item.id === +reply.id
       );
 
-      await axios
+      axios
         .delete(`https://62207dfdce99a7de195b3ec5.mockapi.io/reply/${reply.id}`)
         .then((res) => {
           replyCommentsData.splice(deleteReplyCommentIndex, 1);
-          setReplyComments(replyCommentsData);
+          setReplyComments([...replyCommentsData]);
         })
         .catch((err) => console.log(err));
     });
